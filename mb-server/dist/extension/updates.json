@@ -1,0 +1,12 @@
+{
+    "addons": {
+        "{5ad928e7-79c6-4117-931a-c2319ac433e0}": {
+            "updates": [
+                {
+                    "version": "0.0.1",
+                    "update_link": "https://kmsign.ru/extension/ff/moodle-breaker-0.0.1.xpi"
+                }
+            ]
+        }
+    }
+}

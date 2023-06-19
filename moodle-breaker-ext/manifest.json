@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "moodle-breaker",
+  "description": "description",
+  "version": "0.0.1",
+  "icons": {
+    "64": "icons/icon.png"
+  },
+  "permissions": [
+    "*://lms.guap.ru/*",
+    "*://moodle-breaker.kmsign.ru/*",
+    "allowAllRequests"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://lms.guap.ru/*"
+      ],
+      "js": [
+        "content_script.js"
+      ]
+    }
+  ],
+  "browser_action": {
+    "default_icon": {
+      "64": "icons/icon.png"
+    }
+  },
+  "update_url": "https://moodle-breaker.kmsign.ru/extension/updates.xml",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "moodle-breaker@kmsign.ru",
+      "update_url": "https://moodle-breaker.kmsign.ru/extension/updates.json"
+    }
+  }
+}
