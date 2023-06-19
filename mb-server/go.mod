@@ -3,6 +3,7 @@ module mb-server
 go 1.19
 
 require (
+	github.com/caarlos0/env/v8 v8.0.0
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/rs/cors v1.8.2
 )

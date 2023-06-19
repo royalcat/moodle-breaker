@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/caarlos0/env/v8"
 	"github.com/julienschmidt/httprouter"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -182,44 +183,6 @@ func getQuestionResult(results []QuestionResult) []Answer {
 	return btrgo.ValuesOfMap(answers)
 }
 
-func main() {
-	clientOptions := options.Client().ApplyURI("mongodb://myAdmin:1a2s3d4f@kmsign.ru:27017/?authSource=admin&authMechanism=SCRAM-SHA-256")
-	client, err := mongo.Connect(context.Background(), clientOptions)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	db := client.Database("moodle-breaker")
-	coll = db.Collection("answers_copy") // FIXME
-
-	router := httprouter.New()
-	router.POST("/addQuestionResult", AddQuestionResult)
-	router.POST("/getQuestionResult", GetQuestionResult)
-	router.ServeFiles("/extension/*filepath", http.Dir("./extension"))
-
-	handler := cors.AllowAll().Handler(router)
-
-	ctx, cancelBackground := context.WithCancel(context.Background())
-	ticker := time.NewTicker(time.Hour)
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				err := cleanUp()
-				if err != nil {
-					logrus.Errorf("Error cleaning up: %s", err.Error())
-				}
-			case <-ctx.Done():
-				ticker.Stop()
-				return
-			}
-		}
-	}()
-	defer cancelBackground()
-
-	log.Fatal(http.ListenAndServe(":8080", handler))
-}
-
 func cleanUp() error {
 	ctx := context.Background()
 	agg := bson.A{
@@ -319,3 +282,51 @@ var (
 		Help: "The total number of processed events",
 	}, []string{"time_sec", "status"})
 )
+
+type config struct {
+	MongoUrl string `env:"MONGO_URL"`
+	Listen   string `env:"LISTEN" envDefault:":8080"`
+}
+
+func main() {
+	cfg := config{}
+	if err := env.Parse(&cfg); err != nil {
+		log.Fatal("Parse config error: ", err.Error())
+	}
+
+	clientOptions := options.Client().ApplyURI(cfg.MongoUrl)
+	client, err := mongo.Connect(context.Background(), clientOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db := client.Database("moodle-breaker")
+	coll = db.Collection("answers")
+
+	router := httprouter.New()
+	router.POST("/addQuestionResult", AddQuestionResult)
+	router.POST("/getQuestionResult", GetQuestionResult)
+	router.ServeFiles("/extension/*filepath", http.Dir("./dist/extension"))
+
+	handler := cors.AllowAll().Handler(router)
+
+	ctx, cancelBackground := context.WithCancel(context.Background())
+	ticker := time.NewTicker(time.Hour)
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				err := cleanUp()
+				if err != nil {
+					logrus.Errorf("Error cleaning up: %s", err.Error())
+				}
+			case <-ctx.Done():
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+	defer cancelBackground()
+
+	log.Fatal(http.ListenAndServe(cfg.Listen, handler))
+}
