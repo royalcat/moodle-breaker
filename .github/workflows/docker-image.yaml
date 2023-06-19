@@ -1,15 +1,11 @@
 name: Build and Publish Server docker image
 on: [push]
-env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  IMAGE_NAME: moodle-breaker
-  DOCKERFILE_PATH: Dockerfile
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,12 +23,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: mb-server
           push: true
-          tags: ghcr.io/royalcat/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
           platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
