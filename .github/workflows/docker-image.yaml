@@ -3,9 +3,6 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ghcr.io/${{ github.repository }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
