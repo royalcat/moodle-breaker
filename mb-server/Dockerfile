@@ -1,4 +1,5 @@
 FROM golang:1.20 AS build
+RUN go build -v std
 
 WORKDIR /app
 
@@ -17,4 +18,4 @@ COPY ./dist /dist
 COPY --from=build /moodle-breaker /moodle-breaker
 
 
-ENTRYPOINT [ "/app/moodle-breaker" ]
+ENTRYPOINT [ "/moodle-breaker" ]
