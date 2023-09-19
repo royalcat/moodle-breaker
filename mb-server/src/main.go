@@ -12,7 +12,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/royalcat/btrgo"
 	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
@@ -96,7 +95,7 @@ func GetQuestionResult(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 
 func queryQuestionResult(ctx context.Context, filter bson.D, opts ...*options.FindOptions) ([]QuestionResult, error) {
 	var results []QuestionResult
-	cursor, err := coll.Find(ctx, filter)
+	cursor, err := coll.Find(ctx, filter, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,11 +144,11 @@ func searchAnswers(ctx context.Context, question string, testId int) ([]Question
 			{Key: "$search", Value: question},
 		},
 	}}
-	opts := options.Find()
-	opts.SetProjection(bson.D{{Key: "score", Value: bson.E{Key: "$meta", Value: "textScore"}}})
-	opts.SetSort(bson.D{{Key: "score", Value: bson.E{Key: "$meta", Value: "textScore"}}})
-	opts.SetLimit(8)
-	results, err = queryQuestionResult(ctx, filter)
+	opts := options.Find().
+		SetProjection(bson.D{{Key: "score", Value: bson.E{Key: "$meta", Value: "textScore"}}}).
+		SetSort(bson.D{{Key: "score", Value: bson.E{Key: "$meta", Value: "textScore"}}}).
+		SetLimit(8)
+	results, err = queryQuestionResult(ctx, filter, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -157,32 +156,25 @@ func searchAnswers(ctx context.Context, question string, testId int) ([]Question
 	return results, nil
 }
 
-func getQuestionResult(results []QuestionResult) QuestionResult {
-	answers := map[string]Answer{}
-	var maxRes float64
+func getQuestionResult(qresults []QuestionResult) QuestionResult {
+	var qresult QuestionResult
+	var maxResult float64
 
-	for _, res := range results {
-		for _, answ := range res.Answers {
-			if answ.Result > 0 {
-				savedAnsw, ok := answers[answ.Text]
-				if ok {
-					if savedAnsw.Result < answ.Result {
-
-					}
-				} else {
-					answers[answ.Text] = answ
-				}
-
-				if answ.Result > maxRes {
-					maxRes = answ.Result
-				}
+	for i := range qresults {
+		var result float64
+		for _, answ := range qresults[i].Answers {
+			if answ.Result > result {
+				result = answ.Result
 			}
+		}
+
+		if result > maxResult {
+			qresult = qresults[i]
+			maxResult = result
 		}
 	}
 
-	return QuestionResult{
-		Answers: btrgo.ValuesOfMap(answers),
-	}
+	return qresult
 }
 
 func cleanUp() error {
