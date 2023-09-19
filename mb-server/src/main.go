@@ -157,7 +157,7 @@ func searchAnswers(ctx context.Context, question string, testId int) ([]Question
 	return results, nil
 }
 
-func getQuestionResult(results []QuestionResult) []Answer {
+func getQuestionResult(results []QuestionResult) QuestionResult {
 	answers := map[string]Answer{}
 	var maxRes float64
 
@@ -180,7 +180,9 @@ func getQuestionResult(results []QuestionResult) []Answer {
 		}
 	}
 
-	return btrgo.ValuesOfMap(answers)
+	return QuestionResult{
+		Answers: btrgo.ValuesOfMap(answers),
+	}
 }
 
 func cleanUp() error {
