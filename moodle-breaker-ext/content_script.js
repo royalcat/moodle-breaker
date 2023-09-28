@@ -32,8 +32,3 @@ if (sss[sss.length - 1] === "attempt.php") {
   insert_ddwtos(config);
   insert_match(config);
 }
-
-//npx parcel build content_script.js -o bundle.js --out-dir dist
-
-// from root :
-//npx parcel build .\moodle-breaker-ext\content_script.js -o bundle.js --out-dir .\moodle-breaker-ext\dist\

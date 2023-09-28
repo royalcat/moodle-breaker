@@ -26,18 +26,11 @@ export const complete = (
       i++;
     }
 
-    //let rightAnswerBlocks = block.getElementsByClassName("r1");
     let rightAnswers = [];
     rightAnswers.push({
       text: JSON.stringify(answersObject),
       result: parseFloat(currentGrade),
     });
-    // for (let b of rightAnswerBlocks) {
-    //   if (b.getElementsByTagName("input")[0].checked) {
-    //     const restext = b.textContent.slice(2);
-    //
-    //   }
-    // }
 
     let requestBody = {
       test_id: cmid,
@@ -45,15 +38,6 @@ export const complete = (
       answers: rightAnswers,
     };
 
-    // fetch(sendAddress, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(requestBody),
-    // }).then();
-    //fetchAnswer(requestBody,config.sendAddress,(response) => console.log(response));
-    console.log("ddwtos complete", requestBody);
+    //const data = await fetchAnswer(requestBody,sendAddress);
   }
 };

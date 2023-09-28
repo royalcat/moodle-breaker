@@ -33,13 +33,6 @@ export const complete = (
       answers: rightAnswers,
     };
 
-    // fetch(sendAddress, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(requestBody),
-    // }).then((response) => console.log(response));
+    //const data = await fetchAnswer(requestBody,sendAddress);
   }
 };

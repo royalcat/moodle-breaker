@@ -10,7 +10,6 @@ export const multiChoice = async ({
   const blocks = getBlocks("multichoice", "", "notyetanswered");
 
   for (let block of blocks) {
-    // let bl = questBlocks[block];
     if (typeof block !== "object") continue;
 
     let question = block.getElementsByClassName("qtext")[0].textContent;

@@ -6,7 +6,6 @@ export const complete = (
   blocks
 ) => {
   for (let block of blocks) {
-    // let bl = questBlocks[block];
     if (typeof block !== "object") continue;
 
     let currentGrade = block
@@ -23,6 +22,7 @@ export const complete = (
         rightAnswers.push({ text: restext, result: parseFloat(currentGrade) });
       }
     }
+
     rightAnswerBlocks = block.getElementsByClassName("r0");
     for (let b of rightAnswerBlocks) {
       if (b.getElementsByTagName("input")[0].checked) {
@@ -37,15 +37,6 @@ export const complete = (
       answers: rightAnswers,
     };
 
-    // fetch(sendAddress, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(requestBody),
-    // }).then();
-    //fetchAnswer(requestBody,config.sendAddress,(response) => console.log(response));
-    console.log("complete", requestBody);
+    //const data = await fetchAnswer(requestBody,sendAddress);
   }
 };

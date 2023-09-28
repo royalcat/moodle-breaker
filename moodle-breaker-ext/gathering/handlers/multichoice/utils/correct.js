@@ -1,5 +1,7 @@
-export const correct = ({ sendAddress, getAnswer, urlParams, cmid },blocks) => {
-
+export const correct = (
+  { sendAddress, getAnswer, urlParams, cmid },
+  blocks
+) => {
   for (let block of blocks) {
     // let bl = questBlocks[block];
     if (typeof block !== "object") continue;
@@ -30,14 +32,6 @@ export const correct = ({ sendAddress, getAnswer, urlParams, cmid },blocks) => {
       answers: rightAnswers,
     };
 
-    // fetch(sendAddress, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(requestBody),
-    // }).then((response) => console.log(response));
-    console.log("correct", requestBody);
+    //const data = await fetchAnswer(requestBody,sendAddress);
   }
 };

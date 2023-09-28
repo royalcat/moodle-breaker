@@ -1,8 +1,5 @@
 import { fetchAnswer } from "../../../../utils/fetchAnswer";
 
-
-// нужно добавить на сервер проверку на currentGrade > gradeFromDatabase
-// либо фетчить постоянно с клиента, увеличивая нагрузку на сервер :/ 
 export const complete = (
   { sendAddress, getAnswer, urlParams, cmid },
   blocks
@@ -30,16 +27,7 @@ export const complete = (
       question_text: question,
       answers: rightAnswers,
     };
-    // fetch(sendAddress, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(requestBody),
-    // }).then((response) => console.log(response));
 
-    //sendAnswers(requestBody);
-    console.log("short complete", requestBody);
+    //const data = await fetchAnswer(requestBody,sendAddress);
   }
 };

@@ -37,15 +37,6 @@ export const complete = (
       answers: rightAnswers,
     };
 
-    // fetch(sendAddress, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(requestBody),
-    // }).then();
-    //fetchAnswer(requestBody,config.sendAddress,(response) => console.log(response));
-    console.log("match complete", requestBody);
+    //const data = await fetchAnswer(requestBody,sendAddress);
   }
 };

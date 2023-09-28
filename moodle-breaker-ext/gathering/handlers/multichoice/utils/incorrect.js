@@ -1,4 +1,7 @@
-export const incorrect = ({ sendAddress, getAnswer, urlParams, cmid }, blocks) => {
+export const incorrect = (
+  { sendAddress, getAnswer, urlParams, cmid },
+  blocks
+) => {
   for (let block of blocks) {
     // let bl = questBlocks[block];
     if (typeof block !== "object") continue;
@@ -29,7 +32,6 @@ export const incorrect = ({ sendAddress, getAnswer, urlParams, cmid }, blocks) =
       answers: rightAnswers,
     };
 
-    
-    console.log("incorrect", requestBody);
+    //const data = await fetchAnswer(requestBody,sendAddress);
   }
 };

@@ -33,11 +33,5 @@ export const ddwtos = async ({ sendAddress, getAnswer, urlParams, cmid }) => {
       span.style.color = "red";
       span.style.fontWeight = "bold";
     }
-
-    // const text = `<div style="border: 1px solid red;">{  Ответ c баллом ${data.answers[0].result} -  " ${data.answers[0].text} "  }</div>`;
-
-    // block
-    //   .getElementsByClassName("ablock")[0]
-    //   .insertAdjacentHTML("beforeend", text);
   }
 };
