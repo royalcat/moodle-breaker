@@ -279,6 +279,7 @@ var (
 
 type config struct {
 	MongoUrl string `env:"MONGO_URL"`
+	DB       string `env:"DB"`
 	Listen   string `env:"LISTEN" envDefault:":8080"`
 }
 
@@ -294,7 +295,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db := client.Database("moodle-breaker")
+	db := client.Database(cfg.DB)
 	coll = db.Collection("answers")
 
 	router := httprouter.New()
