@@ -13,7 +13,6 @@ import {
   match as gather_match,
 } from "./gathering/handlers/index";
 import { config } from "./utils/config";
-import {} from "./insertion/handlers/ddwtos";
 
 const sss = window.location.pathname.split("/");
 
@@ -32,3 +31,8 @@ if (sss[sss.length - 1] === "attempt.php") {
   insert_ddwtos(config);
   insert_match(config);
 }
+
+/*TODO :
+
+
+*/

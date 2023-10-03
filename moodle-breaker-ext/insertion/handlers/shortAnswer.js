@@ -1,5 +1,6 @@
 import { getBlocks } from "../../utils/getBlocks";
 import { fetchAnswer } from "../../utils/fetchAnswer";
+import { isCorrectData } from "../../utils/isCorrectData";
 
 export const shortAnswer = async ({
   sendAddress,
@@ -7,8 +8,7 @@ export const shortAnswer = async ({
   urlParams,
   cmid,
 }) => {
-  const blocks = getBlocks("shortAnswer", "", "notyetanswered");
-
+  const blocks = getBlocks("shortanswer", "" );
   for (let block of blocks) {
     if (typeof block !== "object") continue;
 
@@ -19,9 +19,12 @@ export const shortAnswer = async ({
       question_text: question,
     };
 
-    const data = await fetchAnswer(requestBody, sendAddress);
+    const data = await fetchAnswer(requestBody, getAnswer);
 
-    const text = `<div style="border: 1px solid red;">{  Ответ c баллом ${data.answers[0].result} -  " ${data.answers[0].text} "  }</div>`;
+    if (!isCorrectData(data)) continue;
+
+
+    const text = `<div style="border: 1px solid red;">  Ответ c баллом ${data.answers[0].result} -  " ${data.answers[0].text} "  </div>`;
 
     block
       .getElementsByClassName("ablock")[0]

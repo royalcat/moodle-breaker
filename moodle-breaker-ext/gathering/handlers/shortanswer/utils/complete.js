@@ -1,6 +1,6 @@
 import { fetchAnswer } from "../../../../utils/fetchAnswer";
 
-export const complete = (
+export const complete = async (
   { sendAddress, getAnswer, urlParams, cmid },
   blocks
 ) => {
@@ -11,8 +11,6 @@ export const complete = (
     let currentGrade = block
       .getElementsByClassName("grade")[0]
       .textContent.split(" ")[1];
-
-    if (currentGrade == 0) continue;
 
     let question = block.getElementsByClassName("qtext")[0].textContent;
 
@@ -28,6 +26,6 @@ export const complete = (
       answers: rightAnswers,
     };
 
-    //const data = await fetchAnswer(requestBody,sendAddress);
+    await fetchAnswer(requestBody, sendAddress);
   }
 };

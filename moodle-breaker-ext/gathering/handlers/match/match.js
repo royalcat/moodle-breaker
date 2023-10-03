@@ -4,5 +4,6 @@ import { getBlocks } from "../../../utils/getBlocks";
 export const match = (config) => {
   const type = "match";
 
+  complete(config, getBlocks(type, "partiallycorrect"));
   complete(config, getBlocks(type, "complete"));
 };

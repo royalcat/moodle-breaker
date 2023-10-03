@@ -1,7 +1,11 @@
+const link = "https://moodle-breaker-test.kmsign.ru";
+const urlParams = new URLSearchParams(window.location.search)
+
 export const config = {
-  sendAddress: "https://moodle-breaker.kmsign.ru/addQuestionResult",
-  getAnswer: "https://moodle-breaker.kmsign.ru/getQuestionResult",
-  searchAnswer:"https://moodle-breaker.kmsign.ru/searchAnswers",
-  urlParams: new URLSearchParams(window.location.search),
-  cmid: parseInt(new URLSearchParams(window.location.search).get("cmid")),
+  sendAddress: link + "/addQuestionResult",
+  getAnswer: link + "/getQuestionResult",
+  searchAnswer: link + "/searchAnswers",
+  urlParams: urlParams,
+  cmid: parseInt(urlParams.get("cmid")),
+  defaultMaxGrade: 1,
 };

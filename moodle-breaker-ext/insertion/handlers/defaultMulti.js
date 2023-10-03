@@ -1,13 +1,16 @@
 import { getBlocks } from "../../utils/getBlocks";
+import { fetchAnswer } from "../../utils/fetchAnswer";
+import { attention } from "../../utils/attention";
+import { isCorrectData } from "../../utils/isCorrectData";
 
 export const multiChoice = async ({
   sendAddress,
   getAnswer,
   urlParams,
   cmid,
+  defaultMaxGrade,
 }) => {
-
-  const blocks = getBlocks("multichoice", "", "notyetanswered");
+  const blocks = getBlocks("multichoice", "");
 
   for (let block of blocks) {
     if (typeof block !== "object") continue;
@@ -22,7 +25,9 @@ export const multiChoice = async ({
     console.log(requestBody);
 
     const data = await fetchAnswer(requestBody, getAnswer);
-    
+
+    if (!isCorrectData(data)) continue;
+
     let flag = false;
     let ans = block.getElementsByClassName("r0");
     for (let a of ans) {
@@ -61,6 +66,7 @@ export const multiChoice = async ({
         }
       }
     }
-    console.log(data);
+
+    attention(data.answers[0].result, defaultMaxGrade, block);
   }
 };

@@ -6,4 +6,5 @@ export const ddwtos = (config) => {
 
   complete(config, getBlocks(type, "complete"));
   complete(config, getBlocks(type, "correct"));
+  complete(config, getBlocks(type, "partiallycorrect"));
 };

@@ -1,7 +1,7 @@
 import { fetchAnswer } from "../../../../utils/fetchAnswer";
 import { config } from "../../../../utils/config";
 
-export const complete = (
+export const complete = async (
   { sendAddress, getAnswer, urlParams, cmid },
   blocks
 ) => {
@@ -12,7 +12,17 @@ export const complete = (
       .getElementsByClassName("grade")[0]
       .textContent.split(" ")[1];
 
-    let question = block.getElementsByClassName("qtext")[0].textContent;
+    let question = block.getElementsByClassName("qtext")[0].cloneNode(true);
+
+    const exceptionQuestionElements = question.querySelectorAll(
+      "span[class*='place']"
+    );
+
+    for (let node of exceptionQuestionElements) {
+      node.parentNode.removeChild(node);
+    }
+
+    question = question.textContent;
 
     let answersObject = {};
 
@@ -38,6 +48,6 @@ export const complete = (
       answers: rightAnswers,
     };
 
-    //const data = await fetchAnswer(requestBody,sendAddress);
+    await fetchAnswer(requestBody, sendAddress);
   }
 };

@@ -1,7 +1,7 @@
 import { fetchAnswer } from "../../../../utils/fetchAnswer";
 import { config } from "../../../../utils/config";
 
-export const complete = (
+export const complete = async (
   { sendAddress, getAnswer, urlParams, cmid },
   blocks
 ) => {
@@ -37,6 +37,6 @@ export const complete = (
       answers: rightAnswers,
     };
 
-    //const data = await fetchAnswer(requestBody,sendAddress);
+    await fetchAnswer(requestBody, sendAddress);
   }
 };

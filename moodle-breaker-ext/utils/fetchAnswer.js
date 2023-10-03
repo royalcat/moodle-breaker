@@ -1,13 +1,19 @@
 import { config } from "./config";
 
 export const fetchAnswer = async (requestBody, address) => {
-  const response = await fetch(address, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestBody),
-  });
-  return await response.json();
+  try {
+    const HTTPmethod = "POST";
+
+    const response = await fetch(address, {
+      method: HTTPmethod,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (e) {}
 };
