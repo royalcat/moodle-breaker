@@ -295,6 +295,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	log.Printf("Connectiong to database: %s\n", cfg.DB)
+
 	db := client.Database(cfg.DB)
 	coll = db.Collection("answers")
 
