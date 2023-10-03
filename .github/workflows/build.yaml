@@ -73,7 +73,7 @@ jobs:
       - name: Get extension artifact
         uses: actions/download-artifact@v3
         with:
-          name: extension-${{github.ref_name}}
+          name: moodle-breaker-ext-${{github.ref_name}}
           path: mb-server/dist/extension
 
       - name: Build and push Docker image
