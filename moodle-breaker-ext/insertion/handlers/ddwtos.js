@@ -2,6 +2,7 @@ import { getBlocks } from "../../utils/getBlocks";
 import { fetchAnswer } from "../../utils/fetchAnswer";
 import { attention } from "../../utils/attention";
 import { isCorrectData } from "../../utils/isCorrectData";
+import { getFullQuestion } from "../../gathering/handlers/ddwtos/utils/getFullQuestion";
 
 export const ddwtos = async ({
   sendAddress,
@@ -15,17 +16,12 @@ export const ddwtos = async ({
   for (let block of blocks) {
     if (typeof block !== "object") continue;
 
-    let question = block.getElementsByClassName("qtext")[0].cloneNode(true);
-
-    const exceptionQuestionElements = question.querySelectorAll(
-      "span[class*='place']"
+    let question = getFullQuestion(
+      block,
+      block.querySelectorAll(
+        "span[class*='choice'][class~='draghome']:not(.dragplaceholder)"
+      )
     );
-
-    for (let node of exceptionQuestionElements) {
-      node.parentNode.removeChild(node);
-    }
-
-    question = question.textContent;
 
     let requestBody = {
       test_id: cmid,

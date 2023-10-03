@@ -1,5 +1,6 @@
 import { fetchAnswer } from "../../../../utils/fetchAnswer";
 import { config } from "../../../../utils/config";
+import { getFullQuestion } from "./getFullQuestion";
 
 export const complete = async (
   { sendAddress, getAnswer, urlParams, cmid },
@@ -12,23 +13,12 @@ export const complete = async (
       .getElementsByClassName("grade")[0]
       .textContent.split(" ")[1];
 
-    let question = block.getElementsByClassName("qtext")[0].cloneNode(true);
-
-    const exceptionQuestionElements = question.querySelectorAll(
-      "span[class*='place']"
-    );
-
-    for (let node of exceptionQuestionElements) {
-      node.parentNode.removeChild(node);
-    }
-
-    question = question.textContent;
-
-    let answersObject = {};
-
-    const choices = block.querySelectorAll(
+    let choices = block.querySelectorAll(
       "span[class*='choice'][class~='placed']"
     );
+
+    let question = getFullQuestion(block, choices);
+    let answersObject = {};
 
     let i = 1;
     for (let choice of choices) {
@@ -51,3 +41,5 @@ export const complete = async (
     await fetchAnswer(requestBody, sendAddress);
   }
 };
+
+// TODO: сделать кнопку закрытия окна с предупреждением

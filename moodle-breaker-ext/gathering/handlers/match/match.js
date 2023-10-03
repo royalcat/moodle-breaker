@@ -6,4 +6,5 @@ export const match = (config) => {
 
   complete(config, getBlocks(type, "partiallycorrect"));
   complete(config, getBlocks(type, "complete"));
+  complete(config, getBlocks(type, "correct"));
 };
