@@ -1,5 +1,4 @@
 import { fetchAnswer } from "../../../../utils/fetchAnswer";
-import { config } from "../../../../utils/config";
 import { getFullQuestion } from "./getFullQuestion";
 
 export const complete = async (
@@ -18,6 +17,7 @@ export const complete = async (
     );
 
     let question = getFullQuestion(block, choices);
+
     let answersObject = {};
 
     let i = 1;
@@ -37,9 +37,6 @@ export const complete = async (
       question_text: question,
       answers: rightAnswers,
     };
-
     await fetchAnswer(requestBody, sendAddress);
   }
 };
-
-// TODO: сделать кнопку закрытия окна с предупреждением
