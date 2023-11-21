@@ -44,6 +44,11 @@ func AddQuestionResult(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 		return
 	}
 
+	if len(q.Answers) == 0 || q.Answers[0].Text == "" || q.Answers[0].Text == "{}" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	q.Id = primitive.NewObjectID()
 	_, err = coll.InsertOne(r.Context(), q)
 	if err != nil {
@@ -136,21 +141,6 @@ func searchAnswers(ctx context.Context, question string, testId int) ([]Question
 
 	if len(results) != 0 {
 		return results, nil
-	}
-
-	filter = bson.D{{
-		Key: "$text",
-		Value: bson.D{
-			{Key: "$search", Value: question},
-		},
-	}}
-	opts := options.Find().
-		SetProjection(bson.D{{Key: "score", Value: bson.E{Key: "$meta", Value: "textScore"}}}).
-		SetSort(bson.D{{Key: "score", Value: bson.E{Key: "$meta", Value: "textScore"}}}).
-		SetLimit(8)
-	results, err = queryQuestionResult(ctx, filter, opts)
-	if err != nil {
-		return nil, err
 	}
 
 	return results, nil
@@ -281,6 +271,7 @@ type config struct {
 	MongoUrl string `env:"MONGO_URL"`
 	DB       string `env:"DB"`
 	Listen   string `env:"LISTEN" envDefault:":8080"`
+	GC       bool   `env:"GC"`
 }
 
 func main() {
@@ -307,23 +298,25 @@ func main() {
 
 	handler := cors.AllowAll().Handler(router)
 
-	ctx, cancelBackground := context.WithCancel(context.Background())
-	ticker := time.NewTicker(time.Hour)
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				err := cleanUp()
-				if err != nil {
-					logrus.Errorf("Error cleaning up: %s", err.Error())
+	if cfg.GC {
+		ctx, cancelBackground := context.WithCancel(context.Background())
+		ticker := time.NewTicker(time.Hour)
+		go func() {
+			for {
+				select {
+				case <-ticker.C:
+					err := cleanUp()
+					if err != nil {
+						logrus.Errorf("Error cleaning up: %s", err.Error())
+					}
+				case <-ctx.Done():
+					ticker.Stop()
+					return
 				}
-			case <-ctx.Done():
-				ticker.Stop()
-				return
 			}
-		}
-	}()
-	defer cancelBackground()
+		}()
+		defer cancelBackground()
+	}
 
 	log.Fatal(http.ListenAndServe(cfg.Listen, handler))
 }
